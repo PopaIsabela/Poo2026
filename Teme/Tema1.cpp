@@ -1,9 +1,7 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 using namespace std;
-
-
-// CLASA COPAC
 
 class Copac {
 private:
@@ -40,7 +38,10 @@ public:
     Copac& operator=(const Copac& c) {
         if (this != &c) {
             nume = c.nume;
-            *inaltime = *c.inaltime;
+            if (inaltime != nullptr) {
+                delete inaltime;
+            }
+            inaltime = new int(*c.inaltime);
         }
         return *this;
     }
@@ -51,31 +52,26 @@ public:
     }
 
     void afisare() {
-        cout << "Copac: " << nume
-            << ", id = " << id
-            << ", inaltime = " << *inaltime << " cm\n";
+        cout << "Copac: " << nume << ", id = " << id << ", inaltime = " << *inaltime << " cm\n";
     }
 
     void descriere() {
-        cout << "Descriere copac: " << nume
-            << " are inaltimea de " << *inaltime << " cm\n";
+        cout << "Descriere copac: " << nume << " are inaltimea de " << *inaltime << " cm\n";
     }
 
     static void infoStatica() {
         cout << "In parc sunt " << nrCopaci << " copaci.\n";
     }
 
-    // Getteri
     string getNume() const { return nume; }
     int getId() const { return id; }
     int getInaltime() const { return *inaltime; }
     static int getNrCopaci() { return nrCopaci; }
 
-    // Setteri
     void setNume(const string& n) { nume = n; }
     void setInaltime(int h) { *inaltime = h; }
+    static void setNrCopaci(int v) { nrCopaci = v; }
 
-    // Supraincarcare operatori
     bool operator==(const Copac& c) const {
         return nume == c.nume && *inaltime == *c.inaltime;
     }
@@ -90,15 +86,32 @@ public:
     }
 
     Copac& operator+=(int delta) {
-        *inaltime += delta;
+        *inaltime = *inaltime + delta;
         return *this;
     }
+
+    void citire() {
+        string n;
+        int h;
+        cout << "Nume copac: ";
+        cin >> n;
+        cout << "Inaltime copac: ";
+        cin >> h;
+        setNume(n);
+        setInaltime(h);
+    }
+
+
+
+
+
+
+
+
+
 };
 
 int Copac::nrCopaci = 0;
-
-
-// CLASA BANCA
 
 class Banca {
 private:
@@ -135,7 +148,10 @@ public:
     Banca& operator=(const Banca& b) {
         if (this != &b) {
             material = b.material;
-            *nrLocuri = *b.nrLocuri;
+            if (nrLocuri != nullptr) {
+                delete nrLocuri;
+            }
+            nrLocuri = new int(*b.nrLocuri);
         }
         return *this;
     }
@@ -146,9 +162,7 @@ public:
     }
 
     void afisare() {
-        cout << "Banca: " << material
-            << ", id = " << id
-            << ", locuri = " << *nrLocuri << "\n";
+        cout << "Banca: " << material << ", id = " << id << ", locuri = " << *nrLocuri << "\n";
     }
 
     void infoMaterial() {
@@ -159,17 +173,15 @@ public:
         cout << "In parc sunt " << nrBanci << " banci.\n";
     }
 
-    // Getteri
     string getMaterial() const { return material; }
     int getId() const { return id; }
     int getNrLocuri() const { return *nrLocuri; }
     static int getNrBanci() { return nrBanci; }
 
-    // Setteri
     void setMaterial(const string& m) { material = m; }
     void setNrLocuri(int l) { *nrLocuri = l; }
+    static void setNrBanci(int v) { nrBanci = v; }
 
-    // Supraincarcare operatori
     bool operator==(const Banca& b) const {
         return material == b.material && *nrLocuri == *b.nrLocuri;
     }
@@ -184,15 +196,31 @@ public:
     }
 
     Banca& operator+=(int deltaLocuri) {
-        *nrLocuri += deltaLocuri;
+        *nrLocuri = *nrLocuri + deltaLocuri;
         return *this;
     }
+
+    void citire() {
+        string m;
+        int l;
+        cout << "Material banca: ";
+        cin >> m;
+        cout << "Numar locuri: ";
+        cin >> l;
+        setMaterial(m);
+        setNrLocuri(l);
+    }
+
+
+
+
+
+
+
+
 };
 
 int Banca::nrBanci = 0;
-
-
-// CLASA ALEE
 
 class Alee {
 private:
@@ -229,7 +257,10 @@ public:
     Alee& operator=(const Alee& a) {
         if (this != &a) {
             nume = a.nume;
-            *lungime = *a.lungime;
+            if (lungime != nullptr) {
+                delete lungime;
+            }
+            lungime = new int(*a.lungime);
         }
         return *this;
     }
@@ -240,9 +271,7 @@ public:
     }
 
     void afisare() {
-        cout << "Alee: " << nume
-            << ", id = " << id
-            << ", lungime = " << *lungime << " m\n";
+        cout << "Alee: " << nume << ", id = " << id << ", lungime = " << *lungime << " m\n";
     }
 
     void infoLungime() {
@@ -253,17 +282,15 @@ public:
         cout << "In parc sunt " << nrAlei << " alei.\n";
     }
 
-    // Getteri
     string getNume() const { return nume; }
     int getId() const { return id; }
     int getLungime() const { return *lungime; }
     static int getNrAlei() { return nrAlei; }
 
-    // Setteri
     void setNume(const string& n) { nume = n; }
     void setLungime(int l) { *lungime = l; }
+    static void setNrAlei(int v) { nrAlei = v; }
 
-    // Supraincarcare operatori
     bool operator==(const Alee& a) const {
         return nume == a.nume && *lungime == *a.lungime;
     }
@@ -278,20 +305,36 @@ public:
     }
 
     Alee& operator+=(int delta) {
-        *lungime += delta;
+        *lungime = *lungime + delta;
         return *this;
     }
+
+    void citire() {
+        string n;
+        int l;
+        cout << "Nume alee: ";
+        cin >> n;
+        cout << "Lungime alee: ";
+        cin >> l;
+        setNume(n);
+        setLungime(l);
+    }
+
+
+
+
+
+
+
+
+
 };
 
 int Alee::nrAlei = 0;
 
 
-// FUNCTIA MAIN
-
 int main() {
-    cout << "Test parc - etapa 2\n\n";
-
-    // Testare clasa Copac
+    cout << "Test parc - etapa 3\n\n";
     Copac c1;
     Copac c2("Stejar");
     Copac c3("Molid", 10, 420);
@@ -304,11 +347,8 @@ int main() {
 
     c1.descriere();
 
-    if (c2 == c4)
-        cout << "c2 si c4 sunt egali\n";
-
-    if (c2 < c3)
-        cout << "c2 este mai scund decat c3\n";
+    if (c2 == c4) cout << "c2 si c4 sunt egali\n";
+    if (c2 < c3) cout << "c2 este mai scund decat c3\n";
 
     Copac c5 = c2 + 30;
     c5.afisare();
@@ -320,11 +360,8 @@ int main() {
     c6 = c3;
     c6.afisare();
 
-    Copac::infoStatica();
 
-    // Testare clasa Banca
     cout << "\nBanci:\n";
-
     Banca b1;
     Banca b2("Metal");
     Banca b3("Plastic", 5, 2);
@@ -337,11 +374,8 @@ int main() {
 
     b1.infoMaterial();
 
-    if (b1 == b4)
-        cout << "b1 si b4 sunt egale\n";
-
-    if (b3 < b2)
-        cout << "b3 are mai putine locuri decat b2\n";
+    if (b1 == b4) cout << "b1 si b4 sunt egale\n";
+    if (b3 < b2) cout << "b3 are mai putine locuri decat b2\n";
 
     Banca b5 = b2 + 3;
     b5.afisare();
@@ -352,11 +386,7 @@ int main() {
     b4 = b3;
     b4.afisare();
 
-    Banca::infoStatica();
-
-    // Testare clasa Alee
     cout << "\nAlei:\n";
-
     Alee a1;
     Alee a2("Aleea Copiilor");
     Alee a3("Aleea Lac", 7, 250);
@@ -369,11 +399,8 @@ int main() {
 
     a1.infoLungime();
 
-    if (a3 == a4)
-        cout << "a3 si a4 sunt egale\n";
-
-    if (a2 < a3)
-        cout << "a2 este mai scurta decat a3\n";
+    if (a3 == a4) cout << "a3 si a4 sunt egale\n";
+    if (a2 < a3) cout << "a2 este mai scurta decat a3\n";
 
     Alee a5 = a2 + 40;
     a5.afisare();
@@ -384,9 +411,17 @@ int main() {
     a4 = a1;
     a4.afisare();
 
-    Alee::infoStatica();
 
-    cout << "\nSfarsit test etapa 2.\n";
-
+    cout << "\nCitire de la tastatura:\n";
+    Copac copacNou;
+    copacNou.citire();
+    copacNou.afisare();
+    Banca bancaNoua;
+    bancaNoua.citire();
+    bancaNoua.afisare();
+    Alee aleeNoua;
+    aleeNoua.citire();
+    aleeNoua.afisare();
+    cout << "\nSfarsit test.\n";
     return 0;
 }
