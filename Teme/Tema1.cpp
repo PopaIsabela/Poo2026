@@ -101,13 +101,42 @@ public:
         setInaltime(h);
     }
 
+    void scrieText(ofstream& out) const {
+        out << nume << " " << *inaltime << "\n";
+    }
 
+    void citesteText(ifstream& in) {
+        string n;
+        int h;
+        in >> n >> h;
+        if (in) {
+            setNume(n);
+            setInaltime(h);
+        }
+    }
 
+    void scrieBinar(ofstream& out) const {
+        int lung = (int)nume.size();
+        out.write((char*)&lung, sizeof(lung));
+        out.write(nume.c_str(), lung);
+        int h = *inaltime;
+        out.write((char*)&h, sizeof(h));
+    }
 
-
-
-
-
+    void citesteBinar(ifstream& in) {
+        int lung = 0;
+        in.read((char*)&lung, sizeof(lung));
+        if (!in) return;
+        string n;
+        n.resize(lung);
+        in.read(&n[0], lung);
+        int h = 0;
+        in.read((char*)&h, sizeof(h));
+        if (in) {
+            setNume(n);
+            setInaltime(h);
+        }
+    }
 
 };
 
@@ -211,13 +240,42 @@ public:
         setNrLocuri(l);
     }
 
+    void scrieText(ofstream& out) const {
+        out << material << " " << *nrLocuri << "\n";
+    }
 
+    void citesteText(ifstream& in) {
+        string m;
+        int l;
+        in >> m >> l;
+        if (in) {
+            setMaterial(m);
+            setNrLocuri(l);
+        }
+    }
 
+    void scrieBinar(ofstream& out) const {
+        int lung = (int)material.size();
+        out.write((char*)&lung, sizeof(lung));
+        out.write(material.c_str(), lung);
+        int l = *nrLocuri;
+        out.write((char*)&l, sizeof(l));
+    }
 
-
-
-
-
+    void citesteBinar(ifstream& in) {
+        int lung = 0;
+        in.read((char*)&lung, sizeof(lung));
+        if (!in) return;
+        string m;
+        m.resize(lung);
+        in.read(&m[0], lung);
+        int l = 0;
+        in.read((char*)&l, sizeof(l));
+        if (in) {
+            setMaterial(m);
+            setNrLocuri(l);
+        }
+    }
 };
 
 int Banca::nrBanci = 0;
@@ -320,13 +378,42 @@ public:
         setLungime(l);
     }
 
+    void scrieText(ofstream& out) const {
+        out << nume << " " << *lungime << "\n";
+    }
 
+    void citesteText(ifstream& in) {
+        string n;
+        int l;
+        in >> n >> l;
+        if (in) {
+            setNume(n);
+            setLungime(l);
+        }
+    }
 
+    void scrieBinar(ofstream& out) const {
+        int lung = (int)nume.size();
+        out.write((char*)&lung, sizeof(lung));
+        out.write(nume.c_str(), lung);
+        int l = *lungime;
+        out.write((char*)&l, sizeof(l));
+    }
 
-
-
-
-
+    void citesteBinar(ifstream& in) {
+        int lung = 0;
+        in.read((char*)&lung, sizeof(lung));
+        if (!in) return;
+        string n;
+        n.resize(lung);
+        in.read(&n[0], lung);
+        int l = 0;
+        in.read((char*)&l, sizeof(l));
+        if (in) {
+            setNume(n);
+            setLungime(l);
+        }
+    }
 
 };
 
@@ -334,7 +421,7 @@ int Alee::nrAlei = 0;
 
 
 int main() {
-    cout << "Test parc - etapa 5\n\n";
+    cout << "Test parc - etapa 7\n\n";
     Copac c1;
     Copac c2("Stejar");
     Copac c3("Molid", 10, 420);
@@ -470,6 +557,106 @@ int main() {
         for (int j = 0; j < COLOANE; j++) {
             matriceAlei[i][j].afisare();
         }
+    }
+
+    ofstream foutCopaci("copaci.txt");
+    if (foutCopaci.is_open()) {
+        for (int i = 0; i < NR_COPACI_V; i++) {
+            vectorCopaci[i].scrieText(foutCopaci);
+        }
+        foutCopaci.close();
+    }
+
+    ofstream foutBanci("banci.txt");
+    if (foutBanci.is_open()) {
+        for (int i = 0; i < NR_BANCI_V; i++) {
+            vectorBanci[i].scrieText(foutBanci);
+        }
+        foutBanci.close();
+    }
+
+    ofstream foutAlei("alei.txt");
+    if (foutAlei.is_open()) {
+        for (int i = 0; i < NR_ALEI_V; i++) {
+            vectorAlei[i].scrieText(foutAlei);
+        }
+        foutAlei.close();
+    }
+
+    ifstream finCopaci("copaci.txt");
+    if (finCopaci.is_open()) {
+        Copac cText1;
+        Copac cText2;
+        cText1.citesteText(finCopaci);
+        cText2.citesteText(finCopaci);
+        cout << "\nCopaci cititi din fisier text:\n";
+        cText1.afisare();
+        cText2.afisare();
+        finCopaci.close();
+    }
+
+    ifstream finBanci("banci.txt");
+    if (finBanci.is_open()) {
+        Banca bText1;
+        Banca bText2;
+        bText1.citesteText(finBanci);
+        bText2.citesteText(finBanci);
+        cout << "\nBanci citite din fisier text:\n";
+        bText1.afisare();
+        bText2.afisare();
+        finBanci.close();
+    }
+
+    ifstream finAlei("alei.txt");
+    if (finAlei.is_open()) {
+        Alee aText1;
+        Alee aText2;
+        aText1.citesteText(finAlei);
+        aText2.citesteText(finAlei);
+        cout << "\nAlei citite din fisier text:\n";
+        aText1.afisare();
+        aText2.afisare();
+        finAlei.close();
+    }
+
+    ofstream fBinCopaci("copaci.bin", ios::binary);
+    if (fBinCopaci.is_open()) {
+        for (int i = 0; i < NR_COPACI_V; i++) {
+            vectorCopaci[i].scrieBinar(fBinCopaci);
+        }
+        fBinCopaci.close();
+    }
+
+    ifstream fBinCopaciIn("copaci.bin", ios::binary);
+    if (fBinCopaciIn.is_open()) {
+        Copac cb1;
+        Copac cb2;
+        cb1.citesteBinar(fBinCopaciIn);
+        cb2.citesteBinar(fBinCopaciIn);
+        cout << "\nCopaci cititi din fisier binar:\n";
+        cb1.afisare();
+        cb2.afisare();
+        fBinCopaciIn.close();
+    }
+
+    ofstream fBinAlei("alei.bin", ios::binary);
+    if (fBinAlei.is_open()) {
+        for (int i = 0; i < NR_ALEI_V; i++) {
+            vectorAlei[i].scrieBinar(fBinAlei);
+        }
+        fBinAlei.close();
+    }
+
+    ifstream fBinAleiIn("alei.bin", ios::binary);
+    if (fBinAleiIn.is_open()) {
+        Alee ab1;
+        Alee ab2;
+        ab1.citesteBinar(fBinAleiIn);
+        ab2.citesteBinar(fBinAleiIn);
+        cout << "\nAlei citite din fisier binar:\n";
+        ab1.afisare();
+        ab2.afisare();
+        fBinAleiIn.close();
     }
 
     cout << "\nSfarsit test.\n";
