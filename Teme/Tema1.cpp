@@ -334,7 +334,7 @@ int Alee::nrAlei = 0;
 
 
 int main() {
-    cout << "Test parc - etapa 4\n\n";
+    cout << "Test parc - etapa 5\n\n";
     Copac c1;
     Copac c2("Stejar");
     Copac c3("Molid", 10, 420);
@@ -451,6 +451,25 @@ int main() {
     cout << "\nVector alei (afisare):\n";
     for (int i = 0; i < NR_ALEI_V; i++) {
         vectorAlei[i].afisare();
+    }
+
+    const int LINII = 2;
+    const int COLOANE = 2;
+    Alee matriceAlei[LINII][COLOANE];
+
+    cout << "\nMatrice de alei (citire):\n";
+    for (int i = 0; i < LINII; i++) {
+        for (int j = 0; j < COLOANE; j++) {
+            cout << "Alee [" << i << "][" << j << "]:\n";
+            matriceAlei[i][j].citire();
+        }
+    }
+
+    cout << "\nMatrice de alei (afisare):\n";
+    for (int i = 0; i < LINII; i++) {
+        for (int j = 0; j < COLOANE; j++) {
+            matriceAlei[i][j].afisare();
+        }
     }
 
     cout << "\nSfarsit test.\n";
