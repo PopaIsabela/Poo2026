@@ -513,7 +513,7 @@ void lungireAlee(Alee& a, int delta) {
 
 
 int main() {
-    cout << "Test parc - etapa 9\n\n";
+    cout << "Test parc - etapa 10\n\n";
     Copac c1;
     Copac c2("Stejar");
     Copac c3("Molid", 10, 420);
@@ -772,6 +772,29 @@ int main() {
     Banca& refBanca = bs2;
     cout << "Upcasting banca smart la banca:\n";
     refBanca.afisare();
+
+    int totalInaltime = 0;
+    for (int i = 0; i < NR_COPACI_V; i++) {
+        totalInaltime += vectorCopaci[i].getInaltime();
+    }
+
+    int totalLocuri = 0;
+    for (int i = 0; i < NR_BANCI_V; i++) {
+        totalLocuri += vectorBanci[i].getNrLocuri();
+    }
+
+    int totalLungime = 0;
+    for (int i = 0; i < NR_ALEI_V; i++) {
+        totalLungime += vectorAlei[i].getLungime();
+    }
+
+    ofstream rez("rezumat_parc.txt");
+    if (rez.is_open()) {
+        rez << "Total inaltime copaci: " << totalInaltime << "\n";
+        rez << "Total locuri banci: " << totalLocuri << "\n";
+        rez << "Total lungime alei: " << totalLungime << "\n";
+        rez.close();
+    }
 
     cout << "\nSfarsit test.\n";
     return 0;
