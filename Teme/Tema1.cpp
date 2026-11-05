@@ -422,6 +422,81 @@ public:
 int Alee::nrAlei = 0;
 
 
+class CopacFructifer : public Copac {
+private:
+    string tipFruct;
+    int anPlantare;
+
+public:
+    CopacFructifer() : Copac(), tipFruct("mar"), anPlantare(2020) {}
+
+    CopacFructifer(string nume, int idCopac, int inaltimeCopac, string tip, int an)
+        : Copac(nume, idCopac, inaltimeCopac), tipFruct(tip), anPlantare(an) {
+    }
+
+    CopacFructifer(const CopacFructifer& cf)
+        : Copac(cf), tipFruct(cf.tipFruct), anPlantare(cf.anPlantare) {
+    }
+
+    CopacFructifer& operator=(const CopacFructifer& cf) {
+        if (this != &cf) {
+            Copac::operator=(cf);
+            tipFruct = cf.tipFruct;
+            anPlantare = cf.anPlantare;
+        }
+        return *this;
+    }
+
+    string getTipFruct() const { return tipFruct; }
+    int getAnPlantare() const { return anPlantare; }
+
+    void setTipFruct(const string& t) { tipFruct = t; }
+    void setAnPlantare(int a) { anPlantare = a; }
+
+    void afisareFruct() {
+        afisare();
+        cout << "Tip fruct: " << tipFruct << ", an plantare: " << anPlantare << "\n";
+    }
+};
+
+class BancaSmart : public Banca {
+private:
+    bool arePrizaUSB;
+    string zona;
+
+public:
+    BancaSmart() : Banca(), arePrizaUSB(false), zona("standard") {}
+
+    BancaSmart(string material, int idBanca, int locuri, bool priza, string zonaBanca)
+        : Banca(material, idBanca, locuri), arePrizaUSB(priza), zona(zonaBanca) {
+    }
+
+    BancaSmart(const BancaSmart& bs)
+        : Banca(bs), arePrizaUSB(bs.arePrizaUSB), zona(bs.zona) {
+    }
+
+    BancaSmart& operator=(const BancaSmart& bs) {
+        if (this != &bs) {
+            Banca::operator=(bs);
+            arePrizaUSB = bs.arePrizaUSB;
+            zona = bs.zona;
+        }
+        return *this;
+    }
+
+    bool getArePrizaUSB() const { return arePrizaUSB; }
+    string getZona() const { return zona; }
+
+    void setArePrizaUSB(bool v) { arePrizaUSB = v; }
+    void setZona(const string& z) { zona = z; }
+
+    void afisareDetaliata() {
+        afisare();
+        cout << "Zona banca: " << zona << ", priza USB: " << (arePrizaUSB ? "da" : "nu") << "\n";
+    }
+};
+
+
 void comparaCopaci(const Copac& c1, const Copac& c2) {
     if (*c1.inaltime > *c2.inaltime)
         cout << c1.nume << " este mai inalt decat " << c2.nume << ".\n";
@@ -438,7 +513,7 @@ void lungireAlee(Alee& a, int delta) {
 
 
 int main() {
-    cout << "Test parc - etapa 8\n\n";
+    cout << "Test parc - etapa 9\n\n";
     Copac c1;
     Copac c2("Stejar");
     Copac c3("Molid", 10, 420);
@@ -678,6 +753,26 @@ int main() {
 
     comparaCopaci(c2, c3);
     lungireAlee(a2, 20);
+    cout << "\nClase derivate si upcasting:\n";
+
+    CopacFructifer cf1;
+    CopacFructifer cf2("Mar Golden", 20, 260, "mar", 2018);
+    cf1.afisareFruct();
+    cf2.afisareFruct();
+
+    Copac* pCopac = &cf2;
+    cout << "Upcasting copac fructifer la copac:\n";
+    pCopac->afisare();
+
+    BancaSmart bs1;
+    BancaSmart bs2("Metal", 30, 6, true, "zona copii");
+    bs1.afisareDetaliata();
+    bs2.afisareDetaliata();
+
+    Banca& refBanca = bs2;
+    cout << "Upcasting banca smart la banca:\n";
+    refBanca.afisare();
+
     cout << "\nSfarsit test.\n";
     return 0;
 }
