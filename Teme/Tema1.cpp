@@ -138,6 +138,7 @@ public:
         }
     }
 
+    friend void comparaCopaci(const Copac& c1, const Copac& c2);
 };
 
 int Copac::nrCopaci = 0;
@@ -415,13 +416,29 @@ public:
         }
     }
 
+    friend void lungireAlee(Alee& a, int delta);
 };
 
 int Alee::nrAlei = 0;
 
 
+void comparaCopaci(const Copac& c1, const Copac& c2) {
+    if (*c1.inaltime > *c2.inaltime)
+        cout << c1.nume << " este mai inalt decat " << c2.nume << ".\n";
+    else if (*c1.inaltime < *c2.inaltime)
+        cout << c2.nume << " este mai inalt decat " << c1.nume << ".\n";
+    else
+        cout << "Cei doi copaci au aceeasi inaltime.\n";
+}
+
+void lungireAlee(Alee& a, int delta) {
+    *a.lungime = *a.lungime + delta;
+    cout << "Noua lungime a aleii este " << *a.lungime << " m.\n";
+}
+
+
 int main() {
-    cout << "Test parc - etapa 7\n\n";
+    cout << "Test parc - etapa 8\n\n";
     Copac c1;
     Copac c2("Stejar");
     Copac c3("Molid", 10, 420);
@@ -659,6 +676,8 @@ int main() {
         fBinAleiIn.close();
     }
 
+    comparaCopaci(c2, c3);
+    lungireAlee(a2, 20);
     cout << "\nSfarsit test.\n";
     return 0;
 }
