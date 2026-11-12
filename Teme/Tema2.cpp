@@ -10,60 +10,46 @@ private:
     float pretPeZi;
     static int nrMasini;
     const int id;
-
 public:
-    Masina() : id(1) {
-        marca = "Dacia";
-        model = "Logan";
-        anFabricatie = 2020;
-        pretPeZi = 100;
-        nrMasini++;
-    }
-
-    Masina(string marca, string model) : id(2) {
-        this->marca = marca;
-        this->model = model;
-        anFabricatie = 2022;
-        pretPeZi = 150;
-        nrMasini++;
-    }
-
+    Masina() : id(1), marca("Dacia"), model("Logan"), anFabricatie(2020), pretPeZi(100) { nrMasini++; }
+    Masina(string marca, string model) : id(2), marca(marca), model(model), anFabricatie(2022), pretPeZi(150) { nrMasini++; }
     Masina(string marca, string model, int an, float pret, int idMasina)
-        : id(idMasina) {
-        this->marca = marca;
-        this->model = model;
-        anFabricatie = an;
-        pretPeZi = pret;
+        : id(idMasina), marca(marca), model(model), anFabricatie(an), pretPeZi(pret) {
         nrMasini++;
     }
-
     void afisare() const {
-        cout << "Masina: " << marca << " " << model << endl;
-        cout << "ID: " << id << endl;
-        cout << "An fabricatie: " << anFabricatie << endl;
-        cout << "Pret pe zi: " << pretPeZi << " lei" << endl;
-        cout << "------------------------" << endl;
+        cout << "Masina: " << marca << " " << model << ", ID: " << id
+            << ", an: " << anFabricatie << ", pret/zi: " << pretPeZi << " lei\n";
     }
+    static void afisareNrMasini() { cout << "Numar masini: " << nrMasini << "\n"; }
+};
+int Masina::nrMasini = 0;
 
-    static void afisareNrMasini() {
-        cout << "Numar masini: " << nrMasini << endl;
+class Client {
+private:
+    string nume;
+    string telefon;
+    int varsta;
+public:
+    Client() : nume("Necunoscut"), telefon("-"), varsta(18) {}
+    Client(string nume, string telefon, int varsta)
+        : nume(nume), telefon(telefon), varsta(varsta) {
+    }
+    void afisare() const {
+        cout << "Client: " << nume << ", telefon: " << telefon
+            << ", varsta: " << varsta << "\n";
     }
 };
 
-int Masina::nrMasini = 0;
-
 int main() {
-    cout << "Sistem de inchirieri auto\n\n";
-
+    cout << "Tema 2 - Etapa 2: clienti\n";
     Masina m1;
     Masina m2("BMW", "Seria 3");
     Masina m3("Audi", "A4", 2023, 250, 3);
-
-    m1.afisare();
-    m2.afisare();
-    m3.afisare();
-
+    m1.afisare(); m2.afisare(); m3.afisare();
     Masina::afisareNrMasini();
-
+    Client c1;
+    Client c2("Ana Popescu", "0712345678", 25);
+    c1.afisare(); c2.afisare();
     return 0;
 }
