@@ -41,8 +41,25 @@ public:
     }
 };
 
+class Inchiriere {
+private:
+    int idInchiriere;
+    int nrZile;
+    float pretPeZi;
+public:
+    Inchiriere() : idInchiriere(1), nrZile(1), pretPeZi(100) {}
+    Inchiriere(int id, int zile, float pret)
+        : idInchiriere(id), nrZile(zile), pretPeZi(pret) {
+    }
+    float calculeazaCost() const { return nrZile * pretPeZi; }
+    void afisare() const {
+        cout << "Inchiriere #" << idInchiriere << ", zile: " << nrZile
+            << ", cost total: " << calculeazaCost() << " lei\n";
+    }
+};
+
 int main() {
-    cout << "Tema 2 - Etapa 2: clienti\n";
+    cout << "Tema 2 - Etapa 3: inchirieri\n";
     Masina m1;
     Masina m2("BMW", "Seria 3");
     Masina m3("Audi", "A4", 2023, 250, 3);
@@ -51,5 +68,8 @@ int main() {
     Client c1;
     Client c2("Ana Popescu", "0712345678", 25);
     c1.afisare(); c2.afisare();
+    Inchiriere i1;
+    Inchiriere i2(2, 5, 250);
+    i1.afisare(); i2.afisare();
     return 0;
 }
