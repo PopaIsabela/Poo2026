@@ -24,6 +24,16 @@ public:
             << ", an: " << anFabricatie << ", pret/zi: " << pretPeZi << " lei\n";
     }
     static void afisareNrMasini() { cout << "Numar masini: " << nrMasini << "\n"; }
+    string getMarca() const { return marca; }
+    string getModel() const { return model; }
+    int getAnFabricatie() const { return anFabricatie; }
+    float getPretPeZi() const { return pretPeZi; }
+    int getId() const { return id; }
+    void setMarca(const string& valoare) { marca = valoare; }
+    void setModel(const string& valoare) { model = valoare; }
+    void setAnFabricatie(int valoare) { if (valoare > 1885) anFabricatie = valoare; }
+    void setPretPeZi(float valoare) { if (valoare >= 0) pretPeZi = valoare; }
+    float calculeazaCost(int zile) const { return zile > 0 ? zile * pretPeZi : 0; }
 };
 int Masina::nrMasini = 0;
 
@@ -43,6 +53,12 @@ public:
         cout << "Client: " << nume << ", telefon: " << telefon
             << ", varsta: " << varsta << "\n";
     }
+    string getNume() const { return nume; }
+    string getTelefon() const { return telefon; }
+    int getVarsta() const { return varsta; }
+    void setNume(const string& valoare) { nume = valoare; }
+    void setTelefon(const string& valoare) { telefon = valoare; }
+    void setVarsta(int valoare) { if (valoare >= 18) varsta = valoare; }
 };
 
 class Inchiriere {
@@ -58,6 +74,11 @@ public:
     Inchiriere(const Inchiriere& i) : idInchiriere(i.idInchiriere), nrZile(i.nrZile), pretPeZi(i.pretPeZi) {}
     ~Inchiriere() = default;
     float calculeazaCost() const { return nrZile * pretPeZi; }
+    int getIdInchiriere() const { return idInchiriere; }
+    int getNrZile() const { return nrZile; }
+    float getPretPeZi() const { return pretPeZi; }
+    void setNrZile(int valoare) { if (valoare > 0) nrZile = valoare; }
+    void setPretPeZi(float valoare) { if (valoare >= 0) pretPeZi = valoare; }
     void afisare() const {
         cout << "Inchiriere #" << idInchiriere << ", zile: " << nrZile
             << ", cost total: " << calculeazaCost() << " lei\n";
@@ -65,7 +86,7 @@ public:
 };
 
 int main() {
-    cout << "Tema 2 - Etapa 4: copiere si destructori\n";
+    cout << "Tema 2 - Etapa 5: getteri, setteri si metode\n";
     Masina m1;
     Masina m2("BMW", "Seria 3");
     Masina m3("Audi", "A4", 2023, 250, 3);
@@ -83,5 +104,11 @@ int main() {
     cout << "Obiecte copiate:\n";
     m4.afisare(); c3.afisare(); i3.afisare();
     Masina::afisareNrMasini();
+    cout << "\nTest getteri si setteri:\n";
+    m1.setPretPeZi(120);
+    c1.setNume("Maria Ionescu");
+    i1.setNrZile(3);
+    m1.afisare(); c1.afisare(); i1.afisare();
+    cout << "Cost masina pentru 4 zile: " << m1.calculeazaCost(4) << " lei\n";
     return 0;
 }
