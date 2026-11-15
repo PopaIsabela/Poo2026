@@ -17,6 +17,8 @@ public:
         : id(idMasina), marca(marca), model(model), anFabricatie(an), pretPeZi(pret) {
         nrMasini++;
     }
+    Masina(const Masina& m) : id(m.id), marca(m.marca), model(m.model), anFabricatie(m.anFabricatie), pretPeZi(m.pretPeZi) { nrMasini++; }
+    ~Masina() { nrMasini--; }
     void afisare() const {
         cout << "Masina: " << marca << " " << model << ", ID: " << id
             << ", an: " << anFabricatie << ", pret/zi: " << pretPeZi << " lei\n";
@@ -35,6 +37,8 @@ public:
     Client(string nume, string telefon, int varsta)
         : nume(nume), telefon(telefon), varsta(varsta) {
     }
+    Client(const Client& c) : nume(c.nume), telefon(c.telefon), varsta(c.varsta) {}
+    ~Client() = default;
     void afisare() const {
         cout << "Client: " << nume << ", telefon: " << telefon
             << ", varsta: " << varsta << "\n";
@@ -51,6 +55,8 @@ public:
     Inchiriere(int id, int zile, float pret)
         : idInchiriere(id), nrZile(zile), pretPeZi(pret) {
     }
+    Inchiriere(const Inchiriere& i) : idInchiriere(i.idInchiriere), nrZile(i.nrZile), pretPeZi(i.pretPeZi) {}
+    ~Inchiriere() = default;
     float calculeazaCost() const { return nrZile * pretPeZi; }
     void afisare() const {
         cout << "Inchiriere #" << idInchiriere << ", zile: " << nrZile
@@ -59,7 +65,7 @@ public:
 };
 
 int main() {
-    cout << "Tema 2 - Etapa 3: inchirieri\n";
+    cout << "Tema 2 - Etapa 4: copiere si destructori\n";
     Masina m1;
     Masina m2("BMW", "Seria 3");
     Masina m3("Audi", "A4", 2023, 250, 3);
@@ -71,5 +77,11 @@ int main() {
     Inchiriere i1;
     Inchiriere i2(2, 5, 250);
     i1.afisare(); i2.afisare();
+    Masina m4 = m3;
+    Client c3 = c2;
+    Inchiriere i3 = i2;
+    cout << "Obiecte copiate:\n";
+    m4.afisare(); c3.afisare(); i3.afisare();
+    Masina::afisareNrMasini();
     return 0;
 }
