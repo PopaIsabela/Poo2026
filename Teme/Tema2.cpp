@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 
 class Masina {
@@ -96,7 +97,7 @@ public:
 };
 
 int main() {
-    cout << "Tema 2 - Etapa 6: supraincarcare operatori\n";
+    cout << "Tema 2 - Etapa 7: vectori si calcule inchirieri\n";
     Masina m1;
     Masina m2("BMW", "Seria 3");
     Masina m3("Audi", "A4", 2023, 250, 3);
@@ -130,5 +131,29 @@ int main() {
     Inchiriere i4 = i2 + 2;
     i4 += 1;
     i4.afisare();
+    cout << "\nFlota de masini:\n";
+    vector<Masina> flota;
+    flota.reserve(3);
+    flota.push_back(m1);
+    flota.push_back(m2);
+    flota.push_back(m3);
+    for (const Masina& masina : flota) masina.afisare();
+
+    cout << "\nInchirieri active:\n";
+    vector<Inchiriere> inchirieri;
+    inchirieri.reserve(3);
+    inchirieri.push_back(i1);
+    inchirieri.push_back(i2);
+    inchirieri.push_back(i4);
+    float incasari = 0;
+    int totalZile = 0;
+    for (const Inchiriere& inchiriere : inchirieri) {
+        inchiriere.afisare();
+        incasari += inchiriere.calculeazaCost();
+        totalZile += inchiriere.getNrZile();
+    }
+    cout << "Numar masini in flota: " << flota.size() << "\n";
+    cout << "Total zile inchiriate: " << totalZile << "\n";
+    cout << "Incasari estimate: " << incasari << " lei\n";
     return 0;
 }
