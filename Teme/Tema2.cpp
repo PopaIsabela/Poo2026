@@ -34,6 +34,10 @@ public:
     void setAnFabricatie(int valoare) { if (valoare > 1885) anFabricatie = valoare; }
     void setPretPeZi(float valoare) { if (valoare >= 0) pretPeZi = valoare; }
     float calculeazaCost(int zile) const { return zile > 0 ? zile * pretPeZi : 0; }
+    bool operator==(const Masina& alta) const { return id == alta.id && marca == alta.marca && model == alta.model; }
+    bool operator<(const Masina& alta) const { return pretPeZi < alta.pretPeZi; }
+    Masina operator+(float majorare) const { Masina copie(*this); copie.pretPeZi += majorare; return copie; }
+    Masina& operator+=(float majorare) { pretPeZi += majorare; return *this; }
 };
 int Masina::nrMasini = 0;
 
@@ -59,6 +63,8 @@ public:
     void setNume(const string& valoare) { nume = valoare; }
     void setTelefon(const string& valoare) { telefon = valoare; }
     void setVarsta(int valoare) { if (valoare >= 18) varsta = valoare; }
+    bool operator==(const Client& altul) const { return nume == altul.nume && telefon == altul.telefon; }
+    bool operator<(const Client& altul) const { return varsta < altul.varsta; }
 };
 
 class Inchiriere {
@@ -79,6 +85,10 @@ public:
     float getPretPeZi() const { return pretPeZi; }
     void setNrZile(int valoare) { if (valoare > 0) nrZile = valoare; }
     void setPretPeZi(float valoare) { if (valoare >= 0) pretPeZi = valoare; }
+    bool operator==(const Inchiriere& alta) const { return idInchiriere == alta.idInchiriere; }
+    bool operator<(const Inchiriere& alta) const { return calculeazaCost() < alta.calculeazaCost(); }
+    Inchiriere operator+(int zile) const { Inchiriere copie(*this); copie.nrZile += zile; return copie; }
+    Inchiriere& operator+=(int zile) { if (nrZile + zile > 0) nrZile += zile; return *this; }
     void afisare() const {
         cout << "Inchiriere #" << idInchiriere << ", zile: " << nrZile
             << ", cost total: " << calculeazaCost() << " lei\n";
@@ -86,7 +96,7 @@ public:
 };
 
 int main() {
-    cout << "Tema 2 - Etapa 5: getteri, setteri si metode\n";
+    cout << "Tema 2 - Etapa 6: supraincarcare operatori\n";
     Masina m1;
     Masina m2("BMW", "Seria 3");
     Masina m3("Audi", "A4", 2023, 250, 3);
@@ -110,5 +120,15 @@ int main() {
     i1.setNrZile(3);
     m1.afisare(); c1.afisare(); i1.afisare();
     cout << "Cost masina pentru 4 zile: " << m1.calculeazaCost(4) << " lei\n";
+    cout << "\nTest operatori:\n";
+    cout << "Masini egale? " << (m3 == m4 ? "da" : "nu") << "\n";
+    cout << "Masina mai ieftina? " << (m1 < m3 ? "da" : "nu") << "\n";
+    Masina m5 = m1 + 30;
+    m5 += 10;
+    m5.afisare();
+    cout << "Clienti egali? " << (c2 == c3 ? "da" : "nu") << "\n";
+    Inchiriere i4 = i2 + 2;
+    i4 += 1;
+    i4.afisare();
     return 0;
 }
