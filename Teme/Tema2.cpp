@@ -256,6 +256,112 @@ public:
     }
 };
 
+class MasinaElectrica : public Masina {
+private:
+    int autonomie;
+    float capacitateBaterie;
+
+public:
+    MasinaElectrica() : Masina() {
+        autonomie = 300;
+        capacitateBaterie = 50;
+    }
+
+    MasinaElectrica(string marca, string model, int an,
+        float pret, int id, int autonomie, float baterie)
+        : Masina(marca, model, an, pret, id) {
+        this->autonomie = autonomie;
+        capacitateBaterie = baterie;
+    }
+
+    MasinaElectrica(const MasinaElectrica& m)
+        : Masina(m) {
+        autonomie = m.autonomie;
+        capacitateBaterie = m.capacitateBaterie;
+    }
+
+    int getAutonomie() const {
+        return autonomie;
+    }
+
+    float getCapacitateBaterie() const {
+        return capacitateBaterie;
+    }
+
+    void setAutonomie(int autonomie) {
+        if (autonomie > 0)
+            this->autonomie = autonomie;
+    }
+
+    void setCapacitateBaterie(float baterie) {
+        if (baterie > 0)
+            capacitateBaterie = baterie;
+    }
+
+    void afisare() const {
+        Masina::afisare();
+
+        cout << "Autonomie: " << autonomie << " km" << endl;
+        cout << "Capacitate baterie: "
+            << capacitateBaterie << " kWh" << endl;
+    }
+};
+
+class ClientPremium : public Client {
+private:
+    float reducere;
+    int nrInchirieri;
+
+public:
+    ClientPremium() : Client() {
+        reducere = 10;
+        nrInchirieri = 0;
+    }
+
+    ClientPremium(string nume, string telefon, int varsta,
+        float reducere, int nrInchirieri)
+        : Client(nume, telefon, varsta) {
+        this->reducere = reducere;
+        this->nrInchirieri = nrInchirieri;
+    }
+
+    ClientPremium(const ClientPremium& c)
+        : Client(c) {
+        reducere = c.reducere;
+        nrInchirieri = c.nrInchirieri;
+    }
+
+    float getReducere() const {
+        return reducere;
+    }
+
+    int getNrInchirieri() const {
+        return nrInchirieri;
+    }
+
+    void setReducere(float reducere) {
+        if (reducere >= 0 && reducere <= 100)
+            this->reducere = reducere;
+    }
+
+    void setNrInchirieri(int nr) {
+        if (nr >= 0)
+            nrInchirieri = nr;
+    }
+
+    float calculeazaPretFinal(float pret) const {
+        return pret - pret * reducere / 100;
+    }
+
+    void afisare() const {
+        Client::afisare();
+
+        cout << "Reducere: " << reducere << "%" << endl;
+        cout << "Numar inchirieri: "
+            << nrInchirieri << endl;
+    }
+};
+
 void salveazaText(const vector<Masina>& flota,
     const vector<Inchiriere>& inchirieri) {
 
@@ -498,6 +604,45 @@ int main() {
 
     salveazaBinar(inchirieri);
     citesteBinar();
+
+    cout << "\nMasini electrice:" << endl;
+
+    MasinaElectrica me1;
+
+    MasinaElectrica me2("Tesla", "Model 3",
+        2024, 300, 4, 500, 75);
+
+    me1.afisare();
+    me2.afisare();
+
+    MasinaElectrica me3 = me2;
+
+    me3.setAutonomie(550);
+    me3.afisare();
+
+    cout << "\nClienti premium:" << endl;
+
+    ClientPremium cp1;
+
+    ClientPremium cp2("Andrei Popescu",
+        "0723456789", 30, 15, 8);
+
+    cp1.afisare();
+    cp2.afisare();
+
+    ClientPremium cp3 = cp2;
+
+    cp3.setReducere(20);
+    cp3.afisare();
+
+    float cost = me2.calculeazaCost(5);
+
+    cout << "\nCost inchiriere Tesla pentru 5 zile: "
+        << cost << " lei" << endl;
+
+    cout << "Cost pentru client premium: "
+        << cp2.calculeazaPretFinal(cost)
+        << " lei" << endl;
 
     return 0;
 }
