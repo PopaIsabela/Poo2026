@@ -39,19 +39,19 @@ public:
         nrMasini++;
     }
 
-    ~Masina() {
+    virtual ~Masina() {
         nrMasini--;
     }
 
-    void afisare() const {
+    virtual void afisare() const {
         cout << "Masina: " << marca << " " << model
             << ", ID: " << id
             << ", an: " << anFabricatie
-            << ", pret pe zi: " << pretPeZi << " lei\n";
+            << ", pret pe zi: " << pretPeZi << " lei" << endl;
     }
 
     static void afisareNrMasini() {
-        cout << "Numar masini: " << nrMasini << endl;
+        cout << "Numar obiecte Masina: " << nrMasini << endl;
     }
 
     string getMarca() const {
@@ -92,10 +92,14 @@ public:
             pretPeZi = pret;
     }
 
-    float calculeazaCost(int zile) const {
+    virtual float calculeazaCost(int zile) const {
         if (zile > 0)
             return zile * pretPeZi;
         return 0;
+    }
+
+    virtual string getTip() const {
+        return "Masina normala";
     }
 
     bool operator==(const Masina& m) const {
@@ -109,12 +113,12 @@ public:
 
     Masina operator+(float pret) const {
         Masina copie(*this);
-        copie.pretPeZi += pret;
+        copie.setPretPeZi(copie.pretPeZi + pret);
         return copie;
     }
 
     Masina& operator+=(float pret) {
-        pretPeZi += pret;
+        setPretPeZi(pretPeZi + pret);
         return *this;
     }
 };
@@ -138,9 +142,9 @@ public:
         : nume(c.nume), telefon(c.telefon), varsta(c.varsta) {
     }
 
-    ~Client() = default;
+    virtual ~Client() = default;
 
-    void afisare() const {
+    virtual void afisare() const {
         cout << "Client: " << nume
             << ", telefon: " << telefon
             << ", varsta: " << varsta << endl;
@@ -169,6 +173,14 @@ public:
     void setVarsta(int varsta) {
         if (varsta >= 18)
             this->varsta = varsta;
+    }
+
+    virtual float calculeazaPretFinal(float pret) const {
+        return pret;
+    }
+
+    virtual string getTip() const {
+        return "Client normal";
     }
 
     bool operator==(const Client& c) const {
@@ -238,13 +250,14 @@ public:
 
     Inchiriere operator+(int zile) const {
         Inchiriere copie(*this);
-        copie.nrZile += zile;
+        copie.setNrZile(copie.nrZile + zile);
         return copie;
     }
 
     Inchiriere& operator+=(int zile) {
         if (nrZile + zile > 0)
             nrZile += zile;
+
         return *this;
     }
 
@@ -262,9 +275,9 @@ private:
     float capacitateBaterie;
 
 public:
-    MasinaElectrica() : Masina() {
-        autonomie = 300;
-        capacitateBaterie = 50;
+    MasinaElectrica() : Masina("Dacia", "Spring", 2023, 150, 5) {
+        autonomie = 230;
+        capacitateBaterie = 27;
     }
 
     MasinaElectrica(string marca, string model, int an,
@@ -298,12 +311,20 @@ public:
             capacitateBaterie = baterie;
     }
 
-    void afisare() const {
+    void afisare() const override {
         Masina::afisare();
 
         cout << "Autonomie: " << autonomie << " km" << endl;
         cout << "Capacitate baterie: "
             << capacitateBaterie << " kWh" << endl;
+    }
+
+    float calculeazaCost(int zile) const override {
+        return Masina::calculeazaCost(zile) * 0.95f;
+    }
+
+    string getTip() const override {
+        return "Masina electrica";
     }
 };
 
@@ -349,11 +370,15 @@ public:
             nrInchirieri = nr;
     }
 
-    float calculeazaPretFinal(float pret) const {
+    float calculeazaPretFinal(float pret) const override {
         return pret - pret * reducere / 100;
     }
 
-    void afisare() const {
+    string getTip() const override {
+        return "Client premium";
+    }
+
+    void afisare() const override {
         Client::afisare();
 
         cout << "Reducere: " << reducere << "%" << endl;
@@ -501,6 +526,56 @@ void citesteBinar() {
     in.close();
 }
 
+void raportFinal(const vector<Masina*>& masini,
+    const vector<Client*>& clienti,
+    const vector<Inchiriere>& inchirieri) {
+
+    float incasari = 0;
+    int totalZile = 0;
+    int nrElectrice = 0;
+    int nrPremium = 0;
+    float totalPreturi = 0;
+
+    for (Masina* m : masini) {
+        totalPreturi += m->getPretPeZi();
+
+        if (m->getTip() == "Masina electrica")
+            nrElectrice++;
+    }
+
+    for (Client* c : clienti) {
+        if (c->getTip() == "Client premium")
+            nrPremium++;
+    }
+
+    for (const Inchiriere& i : inchirieri) {
+        incasari += i.calculeazaCost();
+        totalZile += i.getNrZile();
+    }
+
+    cout << "\nRaport final firma" << endl;
+    cout << "------------------------" << endl;
+    cout << "Total masini: " << masini.size() << endl;
+    cout << "Masini electrice: " << nrElectrice << endl;
+    cout << "Total clienti: " << clienti.size() << endl;
+    cout << "Clienti premium: " << nrPremium << endl;
+    cout << "Total inchirieri: " << inchirieri.size() << endl;
+    cout << "Total zile inchiriate: " << totalZile << endl;
+    cout << "Total incasari: " << incasari << " lei" << endl;
+
+    if (!masini.empty()) {
+        cout << "Pret mediu pe zi: "
+            << totalPreturi / masini.size()
+            << " lei" << endl;
+    }
+
+    if (!inchirieri.empty()) {
+        cout << "Valoare medie inchiriere: "
+            << incasari / inchirieri.size()
+            << " lei" << endl;
+    }
+}
+
 int main() {
     cout << "Firma de inchirieri auto\n\n";
 
@@ -535,8 +610,6 @@ int main() {
     m4.afisare();
     c3.afisare();
     i3.afisare();
-
-    Masina::afisareNrMasini();
 
     m1.setPretPeZi(120);
     c1.setNume("Maria Ionescu");
@@ -574,30 +647,20 @@ int main() {
 
     cout << "\nLista masini:" << endl;
 
-    for (int j = 0; j < flota.size(); j++) {
-        flota[j].afisare();
+    for (const Masina& m : flota) {
+        m.afisare();
     }
 
     vector<Inchiriere> inchirieri;
 
     inchirieri.push_back(i1);
-    inchirieri.push_back(i2);
     inchirieri.push_back(i4);
-
-    float incasari = 0;
-    int totalZile = 0;
 
     cout << "\nLista inchirieri:" << endl;
 
-    for (int j = 0; j < inchirieri.size(); j++) {
-        inchirieri[j].afisare();
-        incasari += inchirieri[j].calculeazaCost();
-        totalZile += inchirieri[j].getNrZile();
+    for (const Inchiriere& i : inchirieri) {
+        i.afisare();
     }
-
-    cout << "Numar masini: " << flota.size() << endl;
-    cout << "Total zile: " << totalZile << endl;
-    cout << "Total incasari: " << incasari << " lei" << endl;
 
     salveazaText(flota, inchirieri);
     citesteText();
@@ -605,44 +668,91 @@ int main() {
     salveazaBinar(inchirieri);
     citesteBinar();
 
-    cout << "\nMasini electrice:" << endl;
-
     MasinaElectrica me1;
 
     MasinaElectrica me2("Tesla", "Model 3",
         2024, 300, 4, 500, 75);
 
+    cout << "\nMasini electrice:" << endl;
+
     me1.afisare();
     me2.afisare();
 
     MasinaElectrica me3 = me2;
-
     me3.setAutonomie(550);
     me3.afisare();
-
-    cout << "\nClienti premium:" << endl;
 
     ClientPremium cp1;
 
     ClientPremium cp2("Andrei Popescu",
         "0723456789", 30, 15, 8);
 
+    cout << "\nClienti premium:" << endl;
+
     cp1.afisare();
     cp2.afisare();
 
     ClientPremium cp3 = cp2;
-
     cp3.setReducere(20);
     cp3.afisare();
 
-    float cost = me2.calculeazaCost(5);
+    Masina* ptrMasina = &me2;
+    Client* ptrClient = &cp2;
 
-    cout << "\nCost inchiriere Tesla pentru 5 zile: "
-        << cost << " lei" << endl;
+    cout << "\nTest upcasting:" << endl;
 
-    cout << "Cost pentru client premium: "
-        << cp2.calculeazaPretFinal(cost)
-        << " lei" << endl;
+    ptrMasina->afisare();
+    ptrClient->afisare();
+
+    float cost = ptrMasina->calculeazaCost(5);
+    float costFinal = ptrClient->calculeazaPretFinal(cost);
+
+    cout << "Cost initial: " << cost << " lei" << endl;
+    cout << "Cost final: " << costFinal << " lei" << endl;
+
+    vector<Masina*> toateMasinile;
+
+    toateMasinile.push_back(&m1);
+    toateMasinile.push_back(&m2);
+    toateMasinile.push_back(&m3);
+    toateMasinile.push_back(&me1);
+    toateMasinile.push_back(&me2);
+
+    cout << "\nToate masinile:" << endl;
+
+    for (Masina* m : toateMasinile) {
+        cout << m->getTip() << endl;
+        m->afisare();
+
+        cout << "Cost pentru 3 zile: "
+            << m->calculeazaCost(3)
+            << " lei" << endl;
+    }
+
+    vector<Client*> totiClientii;
+
+    totiClientii.push_back(&c1);
+    totiClientii.push_back(&c2);
+    totiClientii.push_back(&cp2);
+
+    cout << "\nToti clientii:" << endl;
+
+    for (Client* c : totiClientii) {
+        cout << c->getTip() << endl;
+        c->afisare();
+
+        cout << "Pret final pentru 1000 lei: "
+            << c->calculeazaPretFinal(1000)
+            << " lei" << endl;
+    }
+
+    Inchiriere i5(3, 5, costFinal / 5);
+    inchirieri.push_back(i5);
+
+    salveazaText(flota, inchirieri);
+    salveazaBinar(inchirieri);
+
+    raportFinal(toateMasinile, totiClientii, inchirieri);
 
     return 0;
 }
